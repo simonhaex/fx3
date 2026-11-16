@@ -42,13 +42,11 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .intro .bottom { display: grid; justify-items: start; align-content: start; gap: 30px; margin-top: clamp(40px, 9vh, 110px); }
 .intro, .intro * { font-family: var(--hnd); }
 .intro .kicker { display: flex; align-items: center; gap: 14px; color: var(--muted); margin-bottom: -6px; }
-.intro .kicker i { width: 34px; height: 1px; background: var(--ember); }
 .intro h1 em { font-style: normal; color: var(--ember); }
 .intro .meta { grid-row: 4; display: flex; gap: 18px; align-items: center; color: rgba(255,255,255,.6); font-size: 11px; }
 .intro .meta .num { letter-spacing: .12em; }
 .intro .meta .right { margin-left: auto; }
-.intro .meta .stby { display: inline-flex; align-items: center; gap: 8px; color: #fff; }
-.intro .meta .stby i { width: 7px; height: 7px; border-radius: 50%; background: var(--ember); animation: blink 1.6s steps(2) infinite; }
+.intro .meta .stby { color: #fff; border: 1px solid rgba(255,255,255,.7); padding: 3px 7px 2px; border-radius: 2px; letter-spacing: .16em; }
 .vf { position: fixed; inset: clamp(10px, 1.6vw, 22px); z-index: 21; pointer-events: none; }
 .vf i { position: absolute; width: 26px; height: 26px; border: 0 solid rgba(255,255,255,.35); }
 .vf i:nth-child(1) { left: 0; top: 0; border-width: 1px 0 0 1px; } .vf i:nth-child(2) { right: 0; top: 0; border-width: 1px 1px 0 0; }
@@ -64,7 +62,10 @@ body.flying .vf, body.flying .intro .meta { opacity: 0 !important; transition: o
 .power { display: flex; align-items: center; gap: 14px; padding: 8px 24px 8px 8px; border: 1px solid rgba(255,255,255,.14); border-radius: 6px; background: rgba(255,255,255,.04); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); transition: border-color .3s, background .3s; }
 .power:hover, .power:focus-visible { border-color: rgba(255,255,255,.4); background: rgba(255,255,255,.08); outline: none; }
 .power:hover .sw { transform: translateX(3px); }
-.power .sw { width: 48px; height: 48px; background: var(--ember); border-radius: 4px; display: grid; place-items: center; color: #fff; transition: transform .3s; }
+.power { position: relative; overflow: hidden; }
+.power .lbl { transition: opacity .3s; }
+.power.on .lbl { opacity: 0; }
+.power .sw { position: relative; z-index: 1; width: 48px; height: 48px; background: var(--ember); border-radius: 4px; display: grid; place-items: center; color: #fff; transition: transform .3s; }
 .power .sw svg { width: 20px; height: 20px; }
 .power b { display: block; font-size: clamp(17px, 1.3vw, 19px); font-weight: 500; text-align: left; }
 .power small { display: block; color: var(--muted); margin-top: 4px; text-align: left; }
@@ -288,17 +289,17 @@ body.flying .vf, body.flying .intro .meta { opacity: 0 !important; transition: o
     <a href="mailto:info@simonhaex.be" class="mail">info@simonhaex.be</a>
   </nav>
   <div class="bottom">
-    <div class="kicker caps"><i></i>Simon Haex · Sound &amp; Vision</div>
+    <div class="kicker caps">Simon Haex · Sound &amp; Vision</div>
     <h1>Al mijn werk<br>op één kaart<em>.</em><span>Zet de camera aan en ontdek wat ik al maakte.</span></h1>
     <div class="actions">
     <button class="power" id="power" autofocus>
       <span class="sw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3v9"/><path d="M6.3 6.8a8 8 0 1 0 11.4 0"/></svg></span>
-      <span><b>Zet de camera aan</b></span>
+      <span class="lbl"><b>Zet de camera aan</b></span>
     </button>
     </div>
   </div>
   <div class="meta caps">
-    <span class="stby"><i></i>STBY</span><span class="num" id="introTC">00:00:00:00</span>
+    <span class="stby">STBY</span><span class="num" id="introTC">00:00:00:00</span>
   </div>
 </div>
 <div class="intro-grain grain" aria-hidden="true"></div>
@@ -4635,7 +4636,7 @@ try {
   const zb = $("zb"), zctx = zb.getContext("2d"), P = new THREE.Vector3();
   let prevP = 0, prevD = 0, blur = 0;
   function zoomBlur() {
-    const v = Math.abs(flight.d - prevD) * 1.0 + Math.abs(flight.p - prevP) * 0.6; prevP = flight.p; prevD = flight.d;
+    const v = Math.abs(flight.d - prevD); prevP = flight.p; prevD = flight.d;
     blur += (Math.min(1.4, v * 34 + flight.d * flight.d * 1.1) - blur) * .3;
     if (blur < .02) { if (zb.style.opacity !== "0") { zb.style.opacity = "0"; glCanvas.style.filter = ""; } return; }
     if (zb.width !== glCanvas.width) { zb.width = glCanvas.width; zb.height = glCanvas.height; }
@@ -4696,10 +4697,23 @@ function showApp() {
 }
 function powerOn() {
   if (powered) return;
-  powered = true; poweredAt = performance.now();
-  audioInit(); sfxPowerOn(); if (renderer && !reduce) sfxWhoosh(1.05, 1.35);
-  $("intro").classList.add("gone"); document.body.classList.add("flying");
-  if (renderer && !reduce) window.__go(); else showApp();
+  powered = true;
+  audioInit(); sfxPowerOn();
+  const btn = $("power"), sw = btn.querySelector(".sw");
+  btn.classList.add("on");
+  const dx = btn.clientWidth - sw.offsetWidth - 16;
+  const go = () => {
+    poweredAt = performance.now();
+    if (renderer && !reduce) sfxWhoosh(1.05, 1.35);
+    $("intro").classList.add("gone"); document.body.classList.add("flying");
+    if (renderer && !reduce) window.__go(); else showApp();
+  };
+  if (reduce) { go(); return; }
+  gsap.timeline({ onComplete: go })
+    .to(sw, { backgroundColor: "#ff5a26", boxShadow: "0 0 0 1px rgba(255,120,60,.6), 0 0 28px 6px rgba(255,80,30,.55)", duration: .18, ease: "power2.out" })
+    .to(sw, { x: dx, duration: .5, ease: "power3.inOut" }, .12)
+    .to(btn, { borderColor: "rgba(255,90,38,.7)", backgroundColor: "rgba(203,54,15,.18)", duration: .4 }, .12)
+    .to({}, { duration: .15 });
 }
 $("power").onclick = powerOn;
 { const t0 = performance.now(), el = $("introTC");
