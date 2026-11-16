@@ -4398,7 +4398,7 @@ function play() {
   clipSound(c.id);
   $("sTitle").textContent = c.title; $("sRole").textContent = c.role; $("sText").textContent = c.text;
   playStart = performance.now();
-  const dur = c.video ? (c.dur || 8) : 5.5;
+  const dur = c.video ? (c.dur || 15) : 10;
   playDur = dur;
   playTL = gsap.timeline({ onComplete: finishPlay });
   if (c.video) {
