@@ -44,7 +44,8 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .intro .kicker { display: flex; align-items: center; gap: 14px; color: var(--muted); margin-bottom: -6px; }
 .intro .kicker i { width: 34px; height: 1px; background: var(--ember); }
 .intro h1 em { font-style: normal; color: var(--ember); }
-.intro .meta { grid-row: 4; display: flex; gap: clamp(14px, 2.4vw, 34px); align-items: center; color: rgba(255,255,255,.55); font-size: 11px; }
+.intro .meta { grid-row: 4; display: flex; gap: 18px; align-items: center; color: rgba(255,255,255,.6); font-size: 11px; }
+.intro .meta .num { letter-spacing: .12em; }
 .intro .meta .right { margin-left: auto; }
 .intro .meta .stby { display: inline-flex; align-items: center; gap: 8px; color: #fff; }
 .intro .meta .stby i { width: 7px; height: 7px; border-radius: 50%; background: var(--ember); animation: blink 1.6s steps(2) infinite; }
@@ -297,11 +298,9 @@ body.flying .vf, body.flying .intro .meta { opacity: 0 !important; transition: o
     </div>
   </div>
   <div class="meta caps">
-    <span class="stby"><i></i>STBY</span><span>FX3 · 4K 25p · S-Log3</span><span class="opt">11 clips · kaart A</span>
-    <span class="right">Videograaf · editor · DJ SMØN</span>
+    <span class="stby"><i></i>STBY</span><span class="num" id="introTC">00:00:00:00</span>
   </div>
 </div>
-<div class="vf" aria-hidden="true"><i></i><i></i><i></i><i></i><b></b></div>
 <div class="intro-grain grain" aria-hidden="true"></div>
 
 <div class="app" id="app">
@@ -4703,9 +4702,14 @@ function powerOn() {
   if (renderer && !reduce) window.__go(); else showApp();
 }
 $("power").onclick = powerOn;
+{ const t0 = performance.now(), el = $("introTC");
+  const tick = () => { if (appOn) return; const f = Math.floor((performance.now() - t0) / 40);
+    el.textContent = [Math.floor(f / 90000), Math.floor(f / 1500) % 60, Math.floor(f / 25) % 60, f % 25].map(n => String(n).padStart(2, "0")).join(":");
+    requestAnimationFrame(tick); };
+  requestAnimationFrame(tick); }
 if (!reduce) {
   gsap.from(".intro .bottom > *", { y: 28, opacity: 0, duration: 1.1, stagger: .12, ease: "power3.out", delay: .15 });
-  gsap.from(".intro .meta, .site-nav, .vf", { opacity: 0, duration: 1.2, delay: .5 });
+  gsap.from(".intro .meta, .site-nav", { opacity: 0, duration: 1.2, delay: .5 });
   gsap.from("#gl", { opacity: 0, duration: 1.4, ease: "power2.out" });
 }
 document.querySelectorAll("a.home").forEach(a => a.onclick = e => { e.preventDefault(); location.reload(); });
