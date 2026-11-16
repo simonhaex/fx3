@@ -63,8 +63,9 @@ body.flying .vf, body.flying .intro .meta { opacity: 0 !important; transition: o
 .power:hover, .power:focus-visible { border-color: rgba(255,255,255,.4); background: rgba(255,255,255,.08); outline: none; }
 .power:hover .sw { transform: translateX(3px); }
 .power { position: relative; overflow: hidden; }
-.power .lbl { transition: opacity .3s; }
-.power.on .lbl { opacity: 0; }
+
+.power.on, .power.on .sw { transition: none !important; }
+.power .trail { position: absolute; left: 8px; top: 8px; bottom: 8px; width: 48px; border-radius: 4px; background: linear-gradient(90deg, rgba(203,54,15,0), rgba(203,54,15,.55)); opacity: 0; pointer-events: none; }
 .power .sw { position: relative; z-index: 1; width: 48px; height: 48px; background: var(--ember); border-radius: 4px; display: grid; place-items: center; color: #fff; transition: transform .3s; }
 .power .sw svg { width: 20px; height: 20px; }
 .power b { display: block; font-size: clamp(17px, 1.3vw, 19px); font-weight: 500; text-align: left; }
@@ -293,7 +294,7 @@ body.flying .vf, body.flying .intro .meta { opacity: 0 !important; transition: o
     <h1>Al mijn werk<br>op één kaart<em>.</em><span>Zet de camera aan en ontdek wat ik al maakte.</span></h1>
     <div class="actions">
     <button class="power" id="power" autofocus>
-      <span class="sw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3v9"/><path d="M6.3 6.8a8 8 0 1 0 11.4 0"/></svg></span>
+      <span class="trail"></span><span class="sw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3v9"/><path d="M6.3 6.8a8 8 0 1 0 11.4 0"/></svg></span>
       <span class="lbl"><b>Zet de camera aan</b></span>
     </button>
     </div>
@@ -4709,11 +4710,15 @@ function powerOn() {
     if (renderer && !reduce) window.__go(); else showApp();
   };
   if (reduce) { go(); return; }
-  gsap.timeline({ onComplete: go })
-    .to(sw, { backgroundColor: "#ff5a26", boxShadow: "0 0 0 1px rgba(255,120,60,.6), 0 0 28px 6px rgba(255,80,30,.55)", duration: .18, ease: "power2.out" })
-    .to(sw, { x: dx, duration: .5, ease: "power3.inOut" }, .12)
-    .to(btn, { borderColor: "rgba(255,90,38,.7)", backgroundColor: "rgba(203,54,15,.18)", duration: .4 }, .12)
-    .to({}, { duration: .15 });
+  const trail = btn.querySelector(".trail"), lbl = btn.querySelector(".lbl");
+  gsap.set(sw, { force3D: true });
+  gsap.timeline({ onComplete: go, defaults: { overwrite: "auto" } })
+    .to(sw, { backgroundColor: "#ff5a26", boxShadow: "0 0 0 1px rgba(255,120,60,.55), 0 0 32px 8px rgba(255,80,30,.5)", duration: .35, ease: "sine.out" }, 0)
+    .to(lbl, { opacity: 0, x: 14, duration: .45, ease: "sine.inOut" }, .1)
+    .to(sw, { x: dx, duration: .85, ease: "expo.inOut" }, .2)
+    .to(trail, { opacity: 1, width: dx + 48, duration: .85, ease: "expo.inOut" }, .2)
+    .to(btn, { borderColor: "rgba(255,90,38,.65)", backgroundColor: "rgba(203,54,15,.14)", duration: .7, ease: "sine.inOut" }, .2)
+    .to({}, { duration: .2 });
 }
 $("power").onclick = powerOn;
 { const t0 = performance.now(), el = $("introTC");
