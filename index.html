@@ -88,8 +88,8 @@ body.flying .vf, body.flying .intro .meta { opacity: 0 !important; transition: o
 .bar .keys kbd { font: inherit; color: var(--muted); border: 1px solid var(--line); border-radius: 3px; padding: 2px 6px; margin-right: 6px; }
 .stage { display: grid; place-items: center; padding: clamp(14px, 2.4vw, 32px); min-height: 0; }
 .cam { width: min(100%, 1480px); max-height: 100%; display: grid; grid-template-columns: minmax(0, 1fr) 300px; background: var(--body); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
-.screen-wrap { padding: 18px; display: grid; place-items: center; min-width: 0; border-right: 1px solid var(--line); background: repeating-linear-gradient(90deg, transparent 0 3px, rgba(255,255,255,.012) 3px 4px); }
-.screen { position: relative; width: 100%; aspect-ratio: 16 / 9; max-height: calc(100vh - 150px); max-width: calc((100vh - 150px) * 16 / 9); background: #000; overflow: hidden; border-radius: 3px; outline: 1px solid #000; box-shadow: 0 0 0 6px #0a0a0b, 0 0 0 7px var(--line); user-select: none; -webkit-user-select: none; touch-action: pan-y; }
+.screen-wrap { padding: 18px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 0; border-right: 1px solid var(--line); background: repeating-linear-gradient(90deg, transparent 0 3px, rgba(255,255,255,.012) 3px 4px); }
+.screen { position: relative; width: 100%; aspect-ratio: 16 / 9; max-height: calc(100vh - 220px); max-width: calc((100vh - 220px) * 16 / 9); background: #000; overflow: hidden; border-radius: 3px; outline: 1px solid #000; box-shadow: 0 0 0 6px #0a0a0b, 0 0 0 7px var(--line); user-select: none; -webkit-user-select: none; touch-action: pan-y; }
 
 /* LCD layers */
 .layer { position: absolute; inset: 0; }
@@ -162,17 +162,22 @@ body.flying .vf, body.flying .intro .meta { opacity: 0 !important; transition: o
 .info, .sub { transition: opacity .4s; }
 
 /* on-screen controls */
-.snav { position: absolute; top: 50%; transform: translateY(-60%); width: clamp(40px, 4vw, 56px); height: clamp(40px, 4vw, 56px); display: grid; place-items: center; background: rgba(10,10,11,.55); border: 1px solid rgba(255,255,255,.18); border-radius: 4px; z-index: 6; opacity: .75; transition: opacity .25s, background .25s, border-color .25s; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
-.snav:hover { opacity: 1; background: rgba(203,54,15,.85); border-color: transparent; }
-.snav svg { width: 46%; height: 46%; fill: none; stroke: #fff; stroke-width: 2; }
+.snav { position: absolute; top: 50%; transform: translateY(-60%); width: clamp(40px, 4vw, 56px); height: clamp(56px, 6vw, 80px); display: grid; place-items: center; z-index: 6; opacity: .7; transition: opacity .25s, transform .25s; filter: drop-shadow(0 1px 6px rgba(0,0,0,.7)); }
+.snav:hover { opacity: 1; }
+.snav.prev:hover { transform: translate(-3px, -60%); } .snav.next:hover { transform: translate(3px, -60%); }
+.snav svg { width: 70%; height: 70%; fill: none; stroke: #fff; stroke-width: 1.6; }
 .snav.prev { left: 2.2%; } .snav.next { right: 2.2%; }
-.bigplay { position: absolute; right: 9%; bottom: 25%; z-index: 6; display: flex; align-items: center; gap: 12px; padding: 10px 18px 10px 10px; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.22); border-radius: 6px; -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); transition: background .25s, border-color .25s, opacity .3s; }
+.playbar { width: 100%; max-width: calc((100vh - 220px) * 16 / 9); display: flex; align-items: center; gap: 18px; margin-top: 16px; }
+.pb-info { color: var(--muted); }
+.bigplay { display: flex; align-items: center; gap: 12px; padding: 8px 20px 8px 8px; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.16); border-radius: 6px; transition: background .25s, border-color .25s, opacity .3s; }
 .bigplay i { width: 40px; height: 40px; background: var(--ember); border-radius: 4px; position: relative; }
 .bigplay i::after { content: ""; position: absolute; left: 15px; top: 12px; border-style: solid; border-width: 8px 0 8px 13px; border-color: transparent transparent transparent #fff; }
 .bigplay:hover { background: rgba(255,255,255,.14); border-color: rgba(255,255,255,.4); }
-.screen[data-state="play"] .bigplay, .screen[data-state="rec"] .bigplay, .screen[data-clip="peloton"] .bigplay { opacity: 0; pointer-events: none; }
+.bigplay.stop i::after { left: 14px; top: 14px; width: 12px; height: 12px; border: 0; background: #fff; }
+.bigplay.rec i { background: var(--rec); border-radius: 50%; } .bigplay.rec i::after { display: none; }
+.bigplay.off { opacity: .35; pointer-events: none; }
 .screen[data-state="rec"] .snav { display: none; }
-@media (max-width: 980px) { .bigplay { right: 6%; bottom: 23%; padding: 6px 12px 6px 6px; } .bigplay i { width: 32px; height: 32px; } .bigplay i::after { left: 12px; top: 9px; border-width: 7px 0 7px 11px; } }
+@media (max-width: 980px) { .playbar { margin-top: 10px; } .pb-info { display: none; } .bigplay { width: 100%; justify-content: center; } }
 
 /* toast */
 .toast { position: absolute; top: 12%; left: 50%; transform: translate(-50%, -10px); background: rgba(10,4,4,.86); border: 1px solid var(--line); border-left: 2px solid var(--flame); padding: 10px 16px; display: flex; gap: 12px; align-items: center; opacity: 0; transition: opacity .3s, transform .3s; pointer-events: none; white-space: nowrap; border-radius: 3px; }
@@ -337,7 +342,6 @@ body.flying .vf, body.flying .intro .meta { opacity: 0 !important; transition: o
           </div>
           <div class="layer shade"></div>
           <div class="layer grain"></div>
-          <div class="layer frame-lines"></div>
           <div class="layer empty-slot">
             <div class="warn caps">Geen beeld · C0012</div>
             <h2>HET_PELOTON<br>_2027.MP4</h2>
@@ -371,7 +375,6 @@ body.flying .vf, body.flying .intro .meta { opacity: 0 !important; transition: o
           <div class="sub" id="sub"><h3 id="sTitle"></h3><div class="r caps" id="sRole"></div><p id="sText"></p></div>
           <button class="snav prev" id="sPrev" aria-label="Vorige clip"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
           <button class="snav next" id="sNext" aria-label="Volgende clip"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
-          <button class="bigplay" id="bigPlay" aria-label="Speel af"><i></i><span class="caps">Speel af</span></button>
           <div class="strip" id="strip"><div class="track" id="track"></div></div>
           <div class="layer hud">
             <div class="row t">
@@ -387,6 +390,10 @@ body.flying .vf, body.flying .intro .meta { opacity: 0 !important; transition: o
           <div class="layer rec-frame"></div>
           <div class="holdbar" id="holdbar"></div>
           <div class="toast" id="toast"><span class="caps">Achievement</span><b id="toastText"></b></div>
+        </div>
+        <div class="playbar">
+          <button class="bigplay" id="bigPlay" aria-label="Speel af"><i></i><span class="caps" id="bigPlayLbl">Speel af</span></button>
+          <span class="pb-info caps" id="pbInfo"></span>
         </div>
       </div>
       <aside class="side">
@@ -4379,7 +4386,17 @@ function select(i, dir) {
   guide();
   $("mobText").innerHTML = c.empty ? "<b>Het Peloton · 2027</b>Druk op REC om mijn cases te openen." : `<b>${c.title}</b>${c.text}`;
 }
+function playbar() {
+  const c = CLIPS[state.i], b = $("bigPlay"), l = $("bigPlayLbl");
+  b.classList.remove("stop", "rec", "off");
+  if (state.mode === "rec") { b.classList.add("rec", "off"); l.textContent = "Opname loopt"; }
+  else if (c.empty) { b.classList.add("rec"); l.textContent = "REC · naar mijn cases"; }
+  else if (state.mode === "play") { b.classList.add("stop"); l.textContent = "Stop"; }
+  else l.textContent = "Speel af";
+  $("pbInfo").textContent = `${c.file} · ${c.title}`;
+}
 function guide() {
+  playbar();
   const c = CLIPS[state.i], n = state.seen.size;
   let k, t;
   if (state.mode === "rec") { k = "Klaar"; t = "Opname loopt. Tot in Destelbergen?"; }
@@ -4538,7 +4555,7 @@ document.querySelectorAll(".wheel button").forEach(b => b.onclick = () => key(b.
 $("bPlay").onclick = () => key("Enter");
 $("sPrev").onclick = e => { e.stopPropagation(); key("ArrowLeft"); };
 $("sNext").onclick = e => { e.stopPropagation(); key("ArrowRight"); };
-$("bigPlay").onclick = e => { e.stopPropagation(); play(); };
+$("bigPlay").onclick = e => { e.stopPropagation(); audioInit(); play(); };
 $("bLut").onclick = toggleLut;
 const bigRec = $("bigRec");
 bigRec.addEventListener("pointerdown", e => { e.preventDefault(); e.stopPropagation(); audioInit(); holdStart(); });
