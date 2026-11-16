@@ -29,7 +29,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   background-size: 140% 140%; animation: drift 18s ease-in-out infinite alternate; }
 @keyframes drift { from { background-position: 0% 0%; } to { background-position: 100% 60%; } }
 @media (prefers-reduced-motion: reduce) { #gl { animation: none; } }
-.intro { position: fixed; inset: 0; z-index: 21; display: grid; grid-template-rows: auto auto 1fr; padding: 28px clamp(16px, 4vw, 48px) calc(28px + env(safe-area-inset-bottom, 0px)); pointer-events: none; }
+.intro { position: fixed; inset: 0; z-index: 21; display: grid; grid-template-rows: auto auto 1fr auto; padding: 28px clamp(16px, 4vw, 48px) calc(28px + env(safe-area-inset-bottom, 0px)); pointer-events: none; }
 .intro > * { pointer-events: auto; }
 .intro .top { display: flex; justify-content: space-between; align-items: center; }
 .site-nav { display: grid !important; grid-template-columns: 1fr 1fr; align-items: center; }
@@ -41,6 +41,22 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 @media (max-width: 860px) { .site-nav .links { display: none; } .site-nav .mail { font-size: 11px; white-space: nowrap; } }
 .intro .bottom { display: grid; justify-items: start; align-content: start; gap: 30px; margin-top: clamp(40px, 9vh, 110px); }
 .intro, .intro * { font-family: var(--hnd); }
+.intro .kicker { display: flex; align-items: center; gap: 14px; color: var(--muted); margin-bottom: -6px; }
+.intro .kicker i { width: 34px; height: 1px; background: var(--ember); }
+.intro h1 em { font-style: normal; color: var(--ember); }
+.intro .meta { grid-row: 4; display: flex; gap: clamp(14px, 2.4vw, 34px); align-items: center; color: rgba(255,255,255,.55); font-size: 11px; }
+.intro .meta .right { margin-left: auto; }
+.intro .meta .stby { display: inline-flex; align-items: center; gap: 8px; color: #fff; }
+.intro .meta .stby i { width: 7px; height: 7px; border-radius: 50%; background: var(--ember); animation: blink 1.6s steps(2) infinite; }
+.vf { position: fixed; inset: clamp(10px, 1.6vw, 22px); z-index: 21; pointer-events: none; }
+.vf i { position: absolute; width: 26px; height: 26px; border: 0 solid rgba(255,255,255,.35); }
+.vf i:nth-child(1) { left: 0; top: 0; border-width: 1px 0 0 1px; } .vf i:nth-child(2) { right: 0; top: 0; border-width: 1px 1px 0 0; }
+.vf i:nth-child(3) { left: 0; bottom: 0; border-width: 0 0 1px 1px; } .vf i:nth-child(4) { right: 0; bottom: 0; border-width: 0 1px 1px 0; }
+.vf b { position: absolute; left: 50%; top: 50%; width: 18px; height: 18px; margin: -9px 0 0 -9px; background: linear-gradient(rgba(255,255,255,.3), rgba(255,255,255,.3)) center / 1px 100% no-repeat, linear-gradient(rgba(255,255,255,.3), rgba(255,255,255,.3)) center / 100% 1px no-repeat; }
+.intro-grain { position: fixed; inset: -10%; z-index: 20; opacity: .06; }
+body.on-app .vf, body.on-app .intro-grain { display: none; }
+body.flying .vf, body.flying .intro .meta { opacity: 0 !important; transition: opacity .4s; }
+@media (max-width: 860px) { .intro .meta .opt, .intro .meta .right { display: none; } .vf b { display: none; } }
 .intro .actions { display: flex; align-items: center; gap: 22px; flex-wrap: wrap; }
 .intro h1 { font-weight: 500; font-size: clamp(50px, 7.4vw, 120px); line-height: .98; letter-spacing: -.025em; max-width: 14ch; }
 .intro h1 span { color: var(--muted); font-weight: 400; display: block; font-size: clamp(18px, 1.7vw, 24px); letter-spacing: -.005em; margin-top: 26px; line-height: 1.45; max-width: 40ch; }
@@ -55,6 +71,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .skip:hover { color: var(--fg); }
 .intro.gone { opacity: 0; transition: opacity .6s; pointer-events: none; }
 .intro.gone > * { pointer-events: none; }
+#zb { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 20; pointer-events: none; opacity: 0; }
 #black { position: fixed; inset: 0; background: #000; z-index: 22; opacity: 0; pointer-events: none; }
 
 /* ---------- app ---------- */
@@ -262,6 +279,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 <body>
 
 <canvas id="gl" aria-hidden="true"></canvas>
+<canvas id="zb" aria-hidden="true"></canvas>
 <div id="black"></div>
 <div class="intro" id="intro">
   <nav class="top site-nav">
@@ -269,7 +287,8 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
     <a href="mailto:info@simonhaex.be" class="mail">info@simonhaex.be</a>
   </nav>
   <div class="bottom">
-    <h1>Al mijn werk<br>op één kaart.<span>Zet de camera aan en blader door alles wat ik al gemaakt heb.</span></h1>
+    <div class="kicker caps"><i></i>Simon Haex · Sound &amp; Vision</div>
+    <h1>Al mijn werk<br>op één kaart<em>.</em><span>Zet de camera aan en ontdek wat ik al maakte.</span></h1>
     <div class="actions">
     <button class="power" id="power" autofocus>
       <span class="sw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3v9"/><path d="M6.3 6.8a8 8 0 1 0 11.4 0"/></svg></span>
@@ -277,7 +296,13 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
     </button>
     </div>
   </div>
+  <div class="meta caps">
+    <span class="stby"><i></i>STBY</span><span>FX3 · 4K 25p · S-Log3</span><span class="opt">11 clips · kaart A</span>
+    <span class="right">Videograaf · editor · DJ SMØN</span>
+  </div>
 </div>
+<div class="vf" aria-hidden="true"><i></i><i></i><i></i><i></i><b></b></div>
+<div class="intro-grain grain" aria-hidden="true"></div>
 
 <div class="app" id="app">
   <header class="bar">
@@ -4189,6 +4214,31 @@ function sfxClick(power) {
   s.connect(f).connect(g2).connect(A.master); s.start(t); s.stop(t + .06);
   if (power) { const b = A.ctx.createOscillator(), bg = A.ctx.createGain(); b.frequency.value = 1900; env(bg, t + .18, .005, .06, .12); b.connect(bg).connect(A.master); b.start(t + .18); b.stop(t + .35); }
 }
+function sfxPowerOn() {
+  if (!A.ctx) return; const t = A.ctx.currentTime;
+  // power switch: soft mechanical clack
+  const k = noiseSrc(), kf = A.ctx.createBiquadFilter(), kg = A.ctx.createGain();
+  kf.type = "bandpass"; kf.frequency.value = 1800; kf.Q.value = .8; env(kg, t, .002, .35, .05);
+  k.connect(kf).connect(kg).connect(A.master); k.start(t); k.stop(t + .1);
+  const th = A.ctx.createOscillator(), tg = A.ctx.createGain();
+  th.frequency.setValueAtTime(140, t); th.frequency.exponentialRampToValueAtTime(60, t + .08); env(tg, t, .003, .3, .1);
+  th.connect(tg).connect(A.master); th.start(t); th.stop(t + .15);
+  // electronics wake up: low hum that rises
+  const hum = A.ctx.createOscillator(), hg = A.ctx.createGain(), hf = A.ctx.createBiquadFilter();
+  hum.type = "sawtooth"; hum.frequency.setValueAtTime(80, t + .08); hum.frequency.exponentialRampToValueAtTime(220, t + .6);
+  hf.type = "lowpass"; hf.frequency.value = 700;
+  hg.gain.setValueAtTime(0.0001, t + .08); hg.gain.exponentialRampToValueAtTime(.05, t + .25); hg.gain.exponentialRampToValueAtTime(0.0001, t + .7);
+  hum.connect(hf).connect(hg).connect(A.master); hum.start(t + .08); hum.stop(t + .75);
+  // lens servo: short whirring motor
+  const sv = A.ctx.createOscillator(), sf = A.ctx.createBiquadFilter(), sg = A.ctx.createGain(), lfo = A.ctx.createOscillator(), lg = A.ctx.createGain();
+  sv.type = "square"; sv.frequency.setValueAtTime(420, t + .22); sv.frequency.linearRampToValueAtTime(560, t + .62);
+  sf.type = "bandpass"; sf.frequency.value = 1200; sf.Q.value = 3;
+  lfo.frequency.value = 38; lg.gain.value = .012; lfo.connect(lg).connect(sg.gain);
+  sg.gain.setValueAtTime(0.0001, t + .22); sg.gain.exponentialRampToValueAtTime(.03, t + .3); sg.gain.setValueAtTime(.03, t + .56); sg.gain.exponentialRampToValueAtTime(0.0001, t + .66);
+  sv.connect(sf).connect(sg).connect(A.master); sv.start(t + .22); sv.stop(t + .7); lfo.start(t + .22); lfo.stop(t + .7);
+  // ready chime: two soft rising tones
+  [[.72, 1568], [.86, 2093]].forEach(([d, f]) => { const o = A.ctx.createOscillator(), g = A.ctx.createGain(); o.type = "sine"; o.frequency.value = f; env(g, t + d, .006, .07, .22); o.connect(g).connect(A.master); o.start(t + d); o.stop(t + d + .3); });
+}
 function sfxWhoosh(delay, dur) {
   if (!A.ctx) return; const t = A.ctx.currentTime + delay;
   const s = noiseSrc(), f = A.ctx.createBiquadFilter(), g = A.ctx.createGain();
@@ -4578,9 +4628,31 @@ try {
     LOOK.set(innerWidth > 900 ? -1.0 : 0, innerWidth > 900 ? 0.15 : 1.25, 0).lerp(SCREEN_C, flight.p);
     cam.lookAt(LOOK);
     renderer.render(scene, cam);
+    zoomBlur();
     requestAnimationFrame(loop);
   };
   requestAnimationFrame(loop);
+  // radial zoom blur: stacked, scaled copies of the frame around the monitor, driven by flight speed
+  const zb = $("zb"), zctx = zb.getContext("2d"), P = new THREE.Vector3();
+  let prevP = 0, prevD = 0, blur = 0;
+  function zoomBlur() {
+    const v = Math.abs(flight.d - prevD) * 1.0 + Math.abs(flight.p - prevP) * 0.6; prevP = flight.p; prevD = flight.d;
+    blur += (Math.min(1.4, v * 34 + flight.d * flight.d * 1.1) - blur) * .3;
+    if (blur < .02) { if (zb.style.opacity !== "0") { zb.style.opacity = "0"; glCanvas.style.filter = ""; } return; }
+    if (zb.width !== glCanvas.width) { zb.width = glCanvas.width; zb.height = glCanvas.height; }
+    P.copy(SCREEN_C).project(cam);
+    const cx = (P.x * .5 + .5) * zb.width, cy = (-P.y * .5 + .5) * zb.height, n = 18;
+    zctx.clearRect(0, 0, zb.width, zb.height);
+    for (let i = 1; i <= n; i++) {
+      const s = 1 + i * .05 * blur;
+      zctx.globalAlpha = Math.min(.7, .6 * (1 - i / (n + 1)) * blur);
+      zctx.setTransform(s, 0, 0, s, cx * (1 - s), cy * (1 - s));
+      zctx.drawImage(glCanvas, 0, 0);
+    }
+    zctx.setTransform(1, 0, 0, 1, 0, 0);
+    zb.style.opacity = "1";
+    glCanvas.style.filter = `blur(${(blur * 7).toFixed(2)}px)`; zb.style.filter = `blur(${(blur * 2).toFixed(2)}px)`;
+  }
   window.__go = () => {
     const tl = gsap.timeline();
     const r0 = rig.rotation.y;
@@ -4617,7 +4689,7 @@ function drawScreen(s) {
 function showApp() {
   if (appOn) return;
   appOn = true; introRunning = false;
-  glCanvas.style.display = "none"; $("intro").style.display = "none";
+  document.body.classList.add("on-app"); glCanvas.style.display = "none"; $("zb").style.display = "none"; $("intro").style.display = "none";
   $("app").classList.add("on");
   select(0);
   requestAnimationFrame(hud);
@@ -4626,11 +4698,16 @@ function showApp() {
 function powerOn() {
   if (powered) return;
   powered = true; poweredAt = performance.now();
-  audioInit(); sfxClick(true); if (renderer && !reduce) sfxWhoosh(1.0, 1.35);
-  $("intro").classList.add("gone");
+  audioInit(); sfxPowerOn(); if (renderer && !reduce) sfxWhoosh(1.05, 1.35);
+  $("intro").classList.add("gone"); document.body.classList.add("flying");
   if (renderer && !reduce) window.__go(); else showApp();
 }
 $("power").onclick = powerOn;
+if (!reduce) {
+  gsap.from(".intro .bottom > *", { y: 28, opacity: 0, duration: 1.1, stagger: .12, ease: "power3.out", delay: .15 });
+  gsap.from(".intro .meta, .site-nav, .vf", { opacity: 0, duration: 1.2, delay: .5 });
+  gsap.from("#gl", { opacity: 0, duration: 1.4, ease: "power2.out" });
+}
 document.querySelectorAll("a.home").forEach(a => a.onclick = e => { e.preventDefault(); location.reload(); });
 $("back").onclick = () => key("Escape");
 $("bSnd").onclick = () => setSound(!A.on);
