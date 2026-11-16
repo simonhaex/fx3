@@ -4413,7 +4413,7 @@ function play() {
   if (state.mode === "play") { stopPlay(); return; }
   state.mode = "play"; screen.dataset.state = "play";
   clipSound(c.id);
-  $("sTitle").textContent = c.title; $("sRole").textContent = c.role; $("sText").textContent = c.text;
+  $("sTitle").textContent = c.title; $("sRole").textContent = c.year ? `${c.role} · ${c.year}` : c.role; $("sText").textContent = c.text;
   playStart = performance.now();
   const dur = c.video ? (c.dur || 15) : 10;
   playDur = dur;
