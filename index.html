@@ -4192,9 +4192,8 @@ const SK = ["Camera", "Montage", "Kleur", "Klank", "Live", "Zelfstandig"];
 const CLIPS = [
   { id: "donbosco", title: "Don Bosco Halle", role: "Opleiding", year: "2018 – 2024", text: "Grafische Media & Multimediatechnieken, de laatste twee jaar in de experttrack. Afgestudeerd met onderscheiding.", img: "donbosco", sk: ["Montage", "Kleur"] },
   { id: "firstvideo", title: "Eerste video's", role: "Beeld · 16 jaar", text: "Op mijn zestiende begon ik te filmen en te monteren. Experimenten werden al snel opdrachten.", img: "simon", sk: ["Camera", "Montage"] },
-  { id: "ableton", title: "Ableton & DJ SMØN", role: "Klank", text: "Naar Ableton om dieper en sneller te werken. Ondertussen sta ik achter de decks als DJ SMØN.", img: "ableton", sk: ["Klank", "Live"] },
   { id: "artevelde", title: "AXE", role: "Arteveldehogeschool · script & regie", text: "AXE als het zelfvertrouwen dat je meeneemt naar een sollicitatiegesprek. Eén draaidag in een echt kantoor in Brussel, samen met Mats Lambrechts.", img: "axe", sk: ["Camera", "Montage"] },
-  { id: "garde", title: "De Laatste Garde", role: "Mini-docu · 2025 · solo", text: "Een van de laatste paardenvissers van Oostduinkerke. Alleen gefilmd met de FX3 en een shotgun in de zeewind. De beste momenten kwamen toen ik stopte met regisseren.", img: "garde", sk: ["Camera", "Klank", "Montage", "Kleur"] },
+  { id: "garde", title: "De Laatste Garde", role: "Mini-docu · 2025 · solo", text: "Een van de laatste paardenvissers van Oostduinkerke. Alleen gefilmd, met een shotgun in de zeewind. De beste momenten kwamen toen ik stopte met regisseren.", img: "garde", video: "clips/garde.mp4", start: 0, dur: 18, sk: ["Camera", "Klank", "Montage", "Kleur"] },
   { id: "chase", title: "The Chase Scene", role: "Concept, boom & audio · 2025", text: "Publieksprijs op het One Minute Festival 2025, als groepsproject.", img: "chase", sk: ["Klank"] },
   { id: "ownbiz", title: "Delhaize Winery", role: "Eigen zaak · videograaf", text: "Employer branding voor Delhaize, gemaakt met mijn eigen videoproductiezaak. Van offerte tot oplevering.", img: "delhaize", sk: ["Zelfstandig", "Camera", "Kleur"] },
   { id: "bnix", title: "BNIX 30 Years", role: "Concept, camera & montage · 2025", text: "Bedrijfsinterviews en een aftermovie in één verhaal. Talking heads die levendig voelen.", img: "bnix", sk: ["Camera", "Montage", "Zelfstandig"] },
@@ -4286,7 +4285,7 @@ function sfxRecBeep() {
 }
 const SOUND = {
   donbosco: { off: 0, lp: 1800, vol: .45 }, firstvideo: { off: 8, lp: 2600, vol: .5 },
-  ableton: { off: 12, lp: 20000, vol: .7 }, artevelde: { off: 20, lp: 2200, vol: .5 }, garde: { sea: true },
+  artevelde: { off: 20, lp: 2200, vol: .5 }, garde: { sea: true },
   chase: { off: 26, lp: 20000, vol: .65, hp: 180 }, ownbiz: { off: 16, lp: 2400, vol: .5 }, bnix: { off: 30, lp: 3000, vol: .55 },
   tomorrowland: { off: 4, lp: 20000, vol: .8, crowd: true }, tnc: { off: 22, lp: 3200, vol: .55 }, goodtimes: { off: 0, lp: 20000, vol: .85 },
   rec: { off: 0, lp: 20000, vol: .7 },
