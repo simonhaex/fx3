@@ -358,8 +358,8 @@ body.flying .vf, body.flying .intro .meta { opacity: 0 !important; transition: o
             <div class="warn caps">Geen beeld – C0012</div>
             <h2>HET_PELOTON<br>_2027.MP4</h2>
             <p>Deze clip bestaat nog niet. Tien weken in Destelbergen: video editor, cameraman of een extra paar benen.</p>
-            <button class="bigrec" id="bigRec" aria-label="REC: open mijn cases"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" class="trk"/><circle cx="50" cy="50" r="46" class="ring" id="recRing"/></svg><i></i></button>
-            <div class="holdhint caps">Druk op REC – naar mijn cases</div>
+            <button class="bigrec" id="bigRec" aria-label="REC: open mijn portfolio"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="46" class="trk"/><circle cx="50" cy="50" r="46" class="ring" id="recRing"/></svg><i></i></button>
+            <div class="holdhint caps">Druk op REC – naar mijn portfolio</div>
           </div>
           <div class="layer finale">
             <div class="k caps">Opname gestart – Het Peloton × Simon Haex</div>
@@ -373,9 +373,9 @@ body.flying .vf, body.flying .intro .meta { opacity: 0 !important; transition: o
             <div class="contact caps">
               <a href="mailto:info@simonhaex.be">info@simonhaex.be</a>
               <a href="tel:+32476052059">+32 476 05 20 59</a>
-              <a href="https://www.simonhaex.be/cases/">simonhaex.be/cases</a>
+              <a href="https://www.simonhaex.be/portfolio-video/">simonhaex.be/portfolio-video</a>
             </div>
-            <div class="goto caps"><span>Je gaat naar simonhaex.be/cases</span><i><b id="goBar"></b></i><a href="https://www.simonhaex.be/cases/">Nu openen →</a></div>
+            <div class="goto caps"><span>Je gaat naar simonhaex.be/portfolio-video</span><i><b id="goBar"></b></i><a href="https://www.simonhaex.be/portfolio-video/">Nu openen →</a></div>
             <button class="back caps" id="back">Esc – blijf hier</button>
           </div>
           <div class="info" id="info">
@@ -4393,13 +4393,13 @@ function select(i, dir) {
   track.style.transform = `translateX(${-(b.offsetLeft + b.offsetWidth / 2)}px)`;
   wheelRot += (dir || 1) * 30; knurl.style.transform = `rotate(${wheelRot}deg)`;
   guide();
-  $("mobText").innerHTML = c.empty ? "<b>Het Peloton, 2027</b>Druk op REC om mijn cases te openen." : `<b>${c.title}</b>${c.text}`;
+  $("mobText").innerHTML = c.empty ? "<b>Het Peloton, 2027</b>Druk op REC om mijn portfolio te openen." : `<b>${c.title}</b>${c.text}`;
 }
 function playbar() {
   const c = CLIPS[state.i], b = $("bigPlay"), l = $("bigPlayLbl");
   b.classList.remove("stop", "rec", "off");
   if (state.mode === "rec") { b.classList.add("rec", "off"); l.textContent = "Opname loopt"; }
-  else if (c.empty) { b.classList.add("rec"); l.textContent = "REC – naar mijn cases"; }
+  else if (c.empty) { b.classList.add("rec"); l.textContent = "REC – naar mijn portfolio"; }
   else if (state.mode === "play") { b.classList.add("stop"); l.textContent = "Stop"; }
   else l.textContent = "Speel af";
   $("pbInfo").textContent = `${c.file} – ${c.title}`;
@@ -4409,7 +4409,7 @@ function guide() {
   const c = CLIPS[state.i], n = state.seen.size;
   let k, t;
   if (state.mode === "rec") { k = "Klaar"; t = "Opname loopt. Tot in Destelbergen?"; }
-  else if (c.empty) { k = "Laatste stap"; t = "Druk op REC: je gaat meteen naar mijn cases."; }
+  else if (c.empty) { k = "Laatste stap"; t = "Druk op REC: daarna ga je naar mijn portfolio."; }
   else if (state.mode === "play") { k = "Speelt af"; t = "Kijk mee. Klik op het scherm om te stoppen."; }
   else if (n === 0) { k = "Stap 1"; t = "Klik op Speel af, of kies een clip in de strook."; }
   else if (n < 4) { k = `${n} bekeken`; t = "Klik op de pijlen of op een clip in de strook."; }
@@ -4536,7 +4536,7 @@ function startRec() {
   if (!reduce) gsap.fromTo(imgGraded, { scale: 1.2, filter: "blur(16px)" }, { scale: 1.04, filter: "blur(0px)", duration: 3, ease: "power2.out" });
   unlock("rec");
   gsap.fromTo("#goBar", { width: 0 }, { width: "100%", duration: 7, ease: "none", delay: 1 });
-  goT = setTimeout(() => { location.href = "https://www.simonhaex.be/cases/"; }, 8200);
+  goT = setTimeout(() => { location.href = "https://www.simonhaex.be/portfolio-video/"; }, 8200);
   guide();
   $("mobText").innerHTML = "<b>De volgende clip maken we samen.</b>Stage bij Het Peloton, 25 januari tot 2 april 2027. info@simonhaex.be";
 }
