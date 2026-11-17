@@ -99,7 +99,7 @@ body.flying .vf, body.flying .intro .meta { opacity: 0 !important; transition: o
 .layer { position: absolute; inset: 0; }
 .media { position: absolute; inset: 0; overflow: hidden; }
 .media .img { position: absolute; inset: -4%; background-size: cover; background-position: center; will-change: transform, filter; }
-.media .log { inset: 0; z-index: 2; pointer-events: none; -webkit-backdrop-filter: saturate(.38) contrast(.66) brightness(1.18); backdrop-filter: saturate(.38) contrast(.66) brightness(1.18); clip-path: inset(0 0 0 100%); }
+.media .log { inset: 0; z-index: 2; pointer-events: none; -webkit-backdrop-filter: saturate(.3) contrast(.6) brightness(1.2); backdrop-filter: saturate(.3) contrast(.6) brightness(1.2); clip-path: inset(0 0 0 100%); }
 .media video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: none; }
 .media .wipe { z-index: 3; }
 .media .graded { clip-path: inset(0 0 0 0); }
@@ -4194,12 +4194,11 @@ const CLIPS = [
   { id: "firstvideo", title: "Eerste video's", role: "Beeld · 16 jaar", text: "Op mijn zestiende begon ik te filmen en te monteren. Experimenten werden al snel opdrachten.", img: "simon", sk: ["Camera", "Montage"] },
   { id: "garde", title: "De Laatste Garde", role: "Mini-docu · 2024 · solo", text: "Een van de laatste paardenvissers van Oostduinkerke. Alleen gefilmd, met een shotgun in de zeewind. De beste momenten kwamen toen ik stopte met regisseren.", img: "garde", video: "clips/garde.mp4", start: 0, dur: 18, sk: ["Camera", "Klank", "Montage", "Kleur"] },
   { id: "artevelde", title: "AXE", role: "Arteveldehogeschool · script & regie · 2025", text: "AXE als het zelfvertrouwen dat je meeneemt naar een sollicitatiegesprek. Eén draaidag in een echt kantoor in Brussel, samen met Mats Lambrechts.", img: "axe", video: "clips/axe.mp4", start: 0, dur: 28, sk: ["Camera", "Montage"] },
-  { id: "chase", title: "The Chase Scene", role: "Concept, boom & audio · 2025", text: "Publieksprijs op het One Minute Festival 2025, als groepsproject.", img: "chase", sk: ["Klank"] },
+  { id: "chase", title: "The Chase Scene", role: "Concept, boom & audio · 2025", text: "Publieksprijs op het One Minute Festival 2025, als groepsproject.", img: "chase", video: "clips/chase.mp4", start: 0, dur: 28, sk: ["Klank"] },
   { id: "ownbiz", title: "Delhaize Winery", role: "Eigen zaak · videograaf", text: "Employer branding voor Delhaize, gemaakt met mijn eigen videoproductiezaak. Van offerte tot oplevering.", img: "delhaize", sk: ["Zelfstandig", "Camera", "Kleur"] },
   { id: "bnix", title: "BNIX 30 Years", role: "Concept, camera & montage · 2025", text: "Bedrijfsinterviews en een aftermovie in één verhaal. Talking heads die levendig voelen.", img: "bnix", sk: ["Camera", "Montage", "Zelfstandig"] },
   { id: "tomorrowland", title: "Tomorrowland", role: "Camera operator · 2026", text: "18 DJ-sets live gefilmd voor FD Productions, over twee weekends. Livestream, artiesten en crowd. Geen tweede take.", img: "tomorrowland", sk: ["Live", "Camera"] },
   { id: "tnc", title: "TNC2027", role: "Script, productie & post · 2026", text: "Luik aangekondigd als gaststad, live gelanceerd in Helsinki. Een droneverbod vlak voor de opnames: de shotlist ter plaatse herschreven, deadline gehaald.", img: "tnc", sk: ["Montage", "Kleur", "Zelfstandig"] },
-  { id: "goodtimes", title: "Good Times", role: "DJ SMØN · 124 BPM", text: "Mijn eigen track: geproduceerd, gemixt en gemasterd door mij. Klank is de andere helft van elke video.", img: "goodtimes", sk: ["Klank", "Live"] },
   { id: "peloton", title: "Het Peloton", role: "Volgende clip · 2027", text: "", empty: true, sk: [] },
 ];
 CLIPS.forEach((c, i) => { c.file = "C" + String(i + 1).padStart(4, "0"); c.kb = [[-3, 2], [3, -2], [2, 3], [-2, -3]][i % 4]; });
@@ -4287,7 +4286,7 @@ const SOUND = {
   donbosco: { off: 0, lp: 1800, vol: .45 }, firstvideo: { off: 8, lp: 2600, vol: .5 },
   artevelde: { off: 20, lp: 2200, vol: .5 }, garde: { sea: true },
   chase: { off: 26, lp: 20000, vol: .65, hp: 180 }, ownbiz: { off: 16, lp: 2400, vol: .5 }, bnix: { off: 30, lp: 3000, vol: .55 },
-  tomorrowland: { off: 4, lp: 20000, vol: .8, crowd: true }, tnc: { off: 22, lp: 3200, vol: .55 }, goodtimes: { off: 0, lp: 20000, vol: .85 },
+  tomorrowland: { off: 4, lp: 20000, vol: .8, crowd: true }, tnc: { off: 22, lp: 3200, vol: .55 },
   rec: { off: 0, lp: 20000, vol: .7 },
 };
 function clipSound(id) {
@@ -4438,9 +4437,9 @@ function play() {
     if (state.graded) {
       setWipe(100); $("hLut").textContent = "S-Log3";
       const w = { p: 100 };
-      playTL.to(w, { p: 0, duration: .8, ease: "power2.inOut", onStart: () => gsap.set("#wipe", { opacity: 1 }),
+      playTL.to(w, { p: 0, duration: c.video ? 1.5 : .8, ease: "power2.inOut", onStart: () => gsap.set("#wipe", { opacity: 1 }),
         onUpdate: () => setWipe(w.p),
-        onComplete: () => { gsap.to("#wipe", { opacity: 0, duration: .3 }); $("hLut").textContent = "LUT · SH Look"; } }, .8);
+        onComplete: () => { gsap.to("#wipe", { opacity: 0, duration: .3 }); $("hLut").textContent = "LUT · SH Look"; } }, c.video ? 2 : .8);
     }
   }
   playTL.fromTo("#sub > *", { opacity: 0, y: 14 }, { opacity: 1, y: 0, stagger: .12, duration: .5, ease: "power3.out" }, .3);
@@ -4469,7 +4468,6 @@ function finishPlay() {
     track.children[state.i].classList.add("seen");
     unlock("first");
     if (c.id === "tomorrowland") unlock("live");
-    if (c.id === "goodtimes") unlock("beat");
     if (state.seen.size === real) unlock("all");
     $("cardCount").textContent = `${state.seen.size}/${real} bekeken`;
     $("cardBar").style.width = (state.seen.size / real * 100) + "%";
@@ -4609,7 +4607,7 @@ function hud(t) {
   if (state.mode === "play") { const e = now - playStart; $("hTC").textContent = tc(e); $("prog").style.width = Math.min(100, e / (playDur * 10)) + "%"; }
   if (state.mode === "rec") $("hTC").textContent = tc(now - recStart);
   const playing = state.mode === "play" && !!CLIPS[state.i].video && !vid.paused && !vid.muted && A.on;
-  const bpm = CLIPS[state.i].id === "goodtimes" ? 124 : 112;
+  const bpm = 112;
   const beat = reduce ? 0 : Math.pow(1 - ((t / 1000 * bpm / 60) % 1), 3);
   for (let k = 0; k < 2; k++) {
     const target = playing ? 0.35 + 0.45 * beat + Math.random() * 0.15 - k * 0.05 : 0;
